@@ -2,7 +2,30 @@
   "schema_version": "1.0",
   "description": "环两山联合会 - 项目注册表（索引）",
   "updatted_at": "2026-05-17",
-  "projects": [],
+  "projects": [
+    {
+      "id": "A-产业对接-20260517-001",
+      "name": "翱翔无人机文旅产业扶持资金申报",
+      "level": "A级",
+      "tag": "产业对接",
+      "owner": "陈烨琳",
+      "participants": "刘晓婷",
+      "approver": "吴剑峰",
+      "start_date": "2026-05-17",
+      "end_date": "2026-05-30",
+      "status": "执行中",
+      "core_goal": "争取20万扶持资金",
+      "budget": 60000,
+      "feishu_master_record": "recvjRuUTuphwI",
+      "feishu_compliance_record": "recvjRuWcTk0BO",
+      "feishu_master": "https://xcn79isy8419.feishu.cn/base/IAKhb8swmaQYHwsKVJacceujnnn",
+      "feishu_compliance": "https://xcn79isy8419.feishu.cn/base/VWxkb3rwga4C3JsO1HPcWcB1niM",
+      "feishu_ledger": "https://xcn79isy8419.feishu.cn/base/Dinyb3Uuca5kIhs3XyZccnlrn2f",
+      "folder_link": "https://xcn79isy8419.feishu.cn/drive/folder/O9MWfrrkKl9HOydTLl3cuugJnte",
+      "created_at": "2026-05-17",
+      "remark": "测试项目：验证项目管理系统全流程SOP"
+    }
+  ],
   "field_description": {
     "id": "项目ID，格式：{级别}-{标签}-{日期}-{序号}，如 A-会务-20260517-001",
     "name": "项目名称",
