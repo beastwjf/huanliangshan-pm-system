@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>环两山联合会 - 项目管理中心</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--primary:#1a6b3c;--primary-light:#e8f5e9;--accent:#d85a30;--bg:#f7f8fa;--card:#fff;--text:#1a1a1a;--text2:#666;--border:#e0e0e0;--radius:10px;--shadow:0 2px 8px rgba(0,0,0,.06)}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text);line-height:1.6;min-height:100vh}
+.header{background:var(--primary);color:#fff;padding:20px 0;text-align:center}
+.header h1{font-size:22px;font-weight:600;letter-spacing:1px}
+.header p{font-size:13px;opacity:.85;margin-top:4px}
+.container{max-width:900px;margin:0 auto;padding:24px 16px}
+.actions{display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:var(--radius);font-size:14px;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:#155a31;transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,107,60,.3)}
+.btn-outline{background:var(--card);color:var(--primary);border:1.5px solid var(--primary)}.btn-outline:hover{background:var(--primary-light)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+.stat-card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);text-align:center}
+.stat-card .num{font-size:28px;font-weight:700;color:var(--primary)}
+.stat-card .label{font-size:12px;color:var(--text2);margin-top:2px}
+.stat-card.accent .num{color:var(--accent)}
+.section-title{font-size:16px;font-weight:600;margin-bottom:12px;padding-left:8px;border-left:3px solid var(--primary)}
+.project-list{display:flex;flex-direction:column;gap:10px}
+.project-card{background:var(--card);border-radius:var(--radius);padding:16px 20px;box-shadow:var(--shadow);display:flex;justify-content:space-between;align-items:center;transition:all .2s;border-left:4px solid transparent}
+.project-card:hover{box-shadow:0 4px 16px rgba(0,0,0,.1);transform:translateY(-1px)}
+.project-card.level-S{border-left-color:#d32f2f}
+.project-card.level-A{border-left-color:#d85a30}
+.project-card.level-B{border-left-color:#1a6b3c}
+.project-card.level-C{border-left-color:#90a4ae}
+.project-info h3{font-size:15px;font-weight:600;margin-bottom:4px}
+.project-info p{font-size:12px;color:var(--text2)}
+.project-meta{text-align:right;flex-shrink:0;margin-left:16px}
+.badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:500}
+.badge-green{background:#e8f5e9;color:#1a6b3c}
+.badge-orange{background:#fff3e0;color:#d85a30}
+.badge-blue{background:#e3f2fd;color:#1565c0}
+.badge-gray{background:#f5f5f5;color:#666}
+.status-text{font-size:12px;color:var(--text2);margin-top:4px}
+.empty{text-align:center;padding:48px 20px;color:var(--text2);font-size:14px}
+.footer{text-align:center;padding:24px;font-size:12px;color:#999;margin-top:24px;border-top:1px solid var(--border)}
+@media(max-width:600px){.project-card{flex-direction:column;align-items:flex-start}.project-meta{text-align:left;margin-left:0;margin-top:8px}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>环两山联合会 - 项目管理中心</h1>
+  <p>AI 驱动的项目全生命周期管理</p>
+</div>
+
+<div class="container">
+  <div class="actions">
+    <a href="https://github.com/beastwjf/huanliangshan-pm-system/issues/new?template=project-form.yml" class="btn btn-primary" target="_blank">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm1 11H7V7h2v4zm0-6H7V3h2v2z"/></svg>
+      新建项目
+    </a>
+    <a href="https://github.com/beastwjf/huanliangshan-pm-system/issues" class="btn btn-outline" target="_blank">
+      查看待处理
+    </a>
+    <a href="https://xcn79isy8419.feishu.cn/base/IAKhb8swmaQYHwsKVJacceujnnn" class="btn btn-outline" target="_blank">
+      飞书项目总表
+    </a>
+    <a href="https://xcn79isy8419.feishu.cn/base/Dinyb3Uuca5kIhs3XyZccnlrn2f" class="btn btn-outline" target="_blank">
+      飞书任务台账
+    </a>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <div class="num" id="stat-total">-</div>
+      <div class="label">项目总数</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-active" style="color:var(--accent)">-</div>
+      <div class="label">执行中</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-done" style="color:#1565c0">-</div>
+      <div class="label">已归档</div>
+    </div>
+    <div class="stat-card">
+      <div class="num" id="stat-pending">-</div>
+      <div class="label">待处理 Issue</div>
+    </div>
+  </div>
+
+  <div class="section-title">项目列表</div>
+  <div id="project-list" class="project-list">
+    <div class="empty">加载中...</div>
+  </div>
+
+  <div class="footer">
+    环两山乡村酒店产业联合会 &middot; 项目管理系统 v1.0
+  </div>
+</div>
+
+<script>
+const API = 'https://api.github.com/repos/beastwjf/huanliangshan-pm-system';
+const TAG_MAP = {'会务':'会务','招商引资':'招商引资','人才培训':'人才培训','联合营销':'联合营销','产业对接':'产业对接','合规':'合规','日常运营':'日常运营','协作托管':'协作托管'};
+const LEVEL_MAP = {'S':'S','A':'A','B':'B','C':'C'};
+
+async function init() {
+  try {
+    const [projectsRes, issuesRes] = await Promise.all([
+      fetch(`${API}/contents/projects.json`),
+      fetch(`${API}/issues?labels=project&state=open&per_page=100`)
+    ]);
+    const projectsData = await projectsRes.json();
+    const issuesData = await issuesRes.json();
+
+    let projects = [];
+    try {
+      const decoded = atob(projectsData.content);
+      projects = JSON.parse(decoded).projects || [];
+    } catch(e) { console.warn('projects.json parse error', e); }
+
+    const pendingIssues = issuesData.filter(i => !i.title.startsWith('[已处理]'));
+
+    // Stats
+    document.getElementById('stat-total').textContent = projects.length;
+    document.getElementById('stat-active').textContent = projects.filter(p => p.status === '执行中').length;
+    document.getElementById('stat-done').textContent = projects.filter(p => p.status === '已归档').length;
+    document.getElementById('stat-pending').textContent = pendingIssues.length;
+
+    // Render project list
+    const listEl = document.getElementById('project-list');
+    if (projects.length === 0) {
+      listEl.innerHTML = '<div class="empty">暂无项目，点击"新建项目"开始</div>';
+      return;
+    }
+    projects.sort((a, b) => (b.start_date || '').localeCompare(a.start_date || ''));
+    listEl.innerHTML = projects.map(p => {
+      const lvl = (p.level || 'B').replace('级','');
+      const statusBadge = p.status === '执行中' ? 'badge-orange'
+        : p.status === '已归档' ? 'badge-blue'
+        : p.status === '已暂停' ? 'badge-gray'
+        : 'badge-green';
+      return `<div class="project-card level-${lvl}">
+        <div class="project-info">
+          <h3>${esc(p.name)}</h3>
+          <p>${esc(p.tag || '')} &middot; ${esc(p.owner || '')} &middot; ${esc(p.start_date || '')} ~ ${esc(p.end_date || '')}</p>
+          ${p.core_goal ? `<p style="margin-top:4px;font-size:12px;color:var(--text2)">目标：${esc(p.core_goal)}</p>` : ''}
+        </div>
+        <div class="project-meta">
+          <span class="badge ${statusBadge}">${esc(p.level || '')}</span>
+          <div class="status-text">${esc(p.status || '')}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('project-list').innerHTML = '<div class="empty">数据加载失败，请刷新重试</div>';
+    console.error(e);
+  }
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+name: 新建项目
+description: 填写项目核心信息，AI 将自动录入飞书项目管理系统
+title: "[新项目] "
+labels: ["project"]
+assignees: []
+body:
+  - type: input
+    id: project-name
+    attributes:
+      label: 项目名称
+      description: 请输入项目全称
+      placeholder: 例如：环两山乡村酒店招商推介会
+    validations:
+      required: true
+
+  - type: dropdown
+    id: project-level
+    attributes:
+      label: 项目级别
+      description: 选择项目优先级
+      options:
+        - S级（战略级，联合会主导）
+        - A级（重点级，跨部门协作）
+        - B级（常规级，单部门可执行）
+        - C级（观察级，评估阶段）
+    validations:
+      required: true
+
+  - type: dropdown
+    id: project-tag
+    attributes:
+      label: 项目分类
+      description: 选择项目所属类别
+      options:
+        - 会务
+        - 招商引资
+        - 人才培训
+        - 联合营销
+        - 产业对接
+        - 合规
+        - 日常运营
+        - 协作托管
+    validations:
+      required: true
+
+  - type: textarea
+    id: project-desc
+    attributes:
+      label: 项目简介
+      description: 一句话描述项目目标和核心内容
+      placeholder: 例如：在南昆山举办首届乡村酒店招商推介会，目标签约10家投资方
+    validations:
+      required: true
+
+  - type: dropdown
+    id: project-owner
+    attributes:
+      label: 负责人
+      description: 项目第一责任人
+      options:
+        - 吴剑峰
+        - 陈烨琳
+        - 刘晓婷
+        - 韦海江
+        - 袁稳亮
+    validations:
+      required: true
+
+  - type: input
+    id: project-end-date
+    attributes:
+      label: 目标完成时间
+      description: 格式 YYYY-MM-DD，可留空
+      placeholder: "2026-06-30"
+
+  - type: input
+    id: project-budget
+    attributes:
+      label: 总预算（元）
+      description: 项目总预算，填数字即可，可留空
+      placeholder: "50000"
+
+  - type: textarea
+    id: project-remark
+    attributes:
+      label: 补充说明
+      description: 其他需要备注的信息（可选）
+      placeholder: 例如：该项目已获政府批文，需在6月底前完成
+    validations:
+      required: false
