@@ -16,6 +16,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 24px;border-radius:var(--radius);font-size:14px;font-weight:500;text-decoration:none;border:none;cursor:pointer;transition:all .2s}
 .btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:#155a31;transform:translateY(-1px);box-shadow:0 4px 12px rgba(26,107,60,.3)}
 .btn-outline{background:var(--card);color:var(--primary);border:1.5px solid var(--primary)}.btn-outline:hover{background:var(--primary-light)}
+.btn-sm{padding:6px 16px;font-size:13px}
 .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
 .stat-card{background:var(--card);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);text-align:center}
 .stat-card .num{font-size:28px;font-weight:700;color:var(--primary)}
@@ -40,7 +41,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 .status-text{font-size:12px;color:var(--text2);margin-top:4px}
 .empty{text-align:center;padding:48px 20px;color:var(--text2);font-size:14px}
 .footer{text-align:center;padding:24px;font-size:12px;color:#999;margin-top:24px;border-top:1px solid var(--border)}
-@media(max-width:600px){.project-card{flex-direction:column;align-items:flex-start}.project-meta{text-align:left;margin-left:0;margin-top:8px}}
+
+/* Modal */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);z-index:100;display:none;justify-content:center;align-items:center;padding:20px}
+.modal-overlay.active{display:flex}
+.modal{background:var(--card);border-radius:var(--radius);width:100%;max-width:560px;max-height:90vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+.modal-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-header h2{font-size:17px;font-weight:600}
+.modal-close{font-size:24px;color:var(--text2);cursor:pointer;line-height:1;background:none;border:none;padding:0;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:6px}
+.modal-close:hover{background:var(--bg);color:var(--text)}
+.modal-body{padding:24px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:13px;font-weight:500;margin-bottom:6px}
+.form-group label .required{color:var(--accent)}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:14px;font-family:inherit;transition:border .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--primary)}
+.form-group textarea{min-height:80px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-footer{display:flex;justify-content:flex-end;gap:12px;padding:16px 24px;border-top:1px solid var(--bg);position:sticky;bottom:0;background:var(--card)}
+.btn-loading{opacity:.7;pointer-events:none}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .8s linear infinite;margin-right:6px;vertical-align:middle}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:24px;right:24px;padding:14px 20px;border-radius:var(--radius);color:#fff;font-size:14px;z-index:200;box-shadow:0 4px 16px rgba(0,0,0,.15);transform:translateY(20px);opacity:0;transition:all .3s}
+.toast.show{transform:translateY(0);opacity:1}
+.toast.success{background:var(--primary)}
+.toast.error{background:#c62828}
+.token-bar{background:var(--card);padding:8px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2)}
+.token-bar input{flex:1;padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:12px;min-width:0}
+.token-bar input:focus{outline:none;border-color:var(--primary)}
+@media(max-width:600px){.project-card{flex-direction:column;align-items:flex-start}.project-meta{text-align:left;margin-left:0;margin-top:8px}.form-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -51,55 +80,207 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hira
 </div>
 
 <div class="container">
+  <div class="token-bar">
+    <span>GitHub Token:</span>
+    <input type="password" id="gh-token" placeholder="首次使用请输入 GitHub Token，仅保存在当前会话" autocomplete="off">
+    <button class="btn btn-sm btn-outline" onclick="saveToken()">保存</button>
+  </div>
+
   <div class="actions">
-    <a href="https://github.com/beastwjf/huanliangshan-pm-system/issues/new?template=project-form.yml" class="btn btn-primary" target="_blank">
+    <button class="btn btn-primary" onclick="openModal()">
       <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm1 11H7V7h2v4zm0-6H7V3h2v2z"/></svg>
       新建项目
-    </a>
-    <a href="https://github.com/beastwjf/huanliangshan-pm-system/issues" class="btn btn-outline" target="_blank">
-      查看待处理
-    </a>
-    <a href="https://xcn79isy8419.feishu.cn/base/IAKhb8swmaQYHwsKVJacceujnnn" class="btn btn-outline" target="_blank">
-      飞书项目总表
-    </a>
-    <a href="https://xcn79isy8419.feishu.cn/base/Dinyb3Uuca5kIhs3XyZccnlrn2f" class="btn btn-outline" target="_blank">
-      飞书任务台账
-    </a>
+    </button>
+    <a href="https://github.com/beastwjf/huanliangshan-pm-system/issues" class="btn btn-outline" target="_blank">查看待处理</a>
+    <a href="https://xcn79isy8419.feishu.cn/base/IAKhb8swmaQYHwsKVJacceujnnn" class="btn btn-outline" target="_blank">飞书项目总表</a>
+    <a href="https://xcn79isy8419.feishu.cn/base/Dinyb3Uuca5kIhs3XyZccnlrn2f" class="btn btn-outline" target="_blank">飞书任务台账</a>
   </div>
 
   <div class="stats">
-    <div class="stat-card">
-      <div class="num" id="stat-total">-</div>
-      <div class="label">项目总数</div>
-    </div>
-    <div class="stat-card">
-      <div class="num" id="stat-active" style="color:var(--accent)">-</div>
-      <div class="label">执行中</div>
-    </div>
-    <div class="stat-card">
-      <div class="num" id="stat-done" style="color:#1565c0">-</div>
-      <div class="label">已归档</div>
-    </div>
-    <div class="stat-card">
-      <div class="num" id="stat-pending">-</div>
-      <div class="label">待处理 Issue</div>
-    </div>
+    <div class="stat-card"><div class="num" id="stat-total">-</div><div class="label">项目总数</div></div>
+    <div class="stat-card"><div class="num" id="stat-active" style="color:var(--accent)">-</div><div class="label">执行中</div></div>
+    <div class="stat-card"><div class="num" id="stat-done" style="color:#1565c0">-</div><div class="label">已归档</div></div>
+    <div class="stat-card"><div class="num" id="stat-pending">-</div><div class="label">待处理 Issue</div></div>
   </div>
 
   <div class="section-title">项目列表</div>
-  <div id="project-list" class="project-list">
-    <div class="empty">加载中...</div>
-  </div>
+  <div id="project-list" class="project-list"><div class="empty">加载中...</div></div>
 
-  <div class="footer">
-    环两山乡村酒店产业联合会 &middot; 项目管理系统 v1.0
+  <div class="footer">环两山乡村酒店产业联合会 &middot; 项目管理系统 v1.0</div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h2>新建项目</h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label>项目名称 <span class="required">*</span></label>
+        <input type="text" id="f-name" placeholder="例如：环两山乡村酒店招商推介会">
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>项目级别 <span class="required">*</span></label>
+          <select id="f-level">
+            <option value="">请选择</option>
+            <option value="S">S级（战略级）</option>
+            <option value="A">A级（重点级）</option>
+            <option value="B">B级（常规级）</option>
+            <option value="C">C级（观察级）</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>项目分类 <span class="required">*</span></label>
+          <select id="f-tag">
+            <option value="">请选择</option>
+            <option value="会务">会务</option>
+            <option value="招商引资">招商引资</option>
+            <option value="人才培训">人才培训</option>
+            <option value="联合营销">联合营销</option>
+            <option value="产业对接">产业对接</option>
+            <option value="合规">合规</option>
+            <option value="日常运营">日常运营</option>
+            <option value="协作托管">协作托管</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>项目简介 <span class="required">*</span></label>
+        <textarea id="f-desc" placeholder="一句话描述项目目标和核心内容"></textarea>
+      </div>
+      <div class="form-group">
+        <label>负责人 <span class="required">*</span></label>
+        <select id="f-owner">
+          <option value="">请选择</option>
+          <option value="吴剑峰">吴剑峰</option>
+          <option value="陈烨琳">陈烨琳</option>
+          <option value="刘晓婷">刘晓婷</option>
+          <option value="韦海江">韦海江</option>
+          <option value="袁稳亮">袁稳亮</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>目标完成时间</label>
+          <input type="date" id="f-end">
+        </div>
+        <div class="form-group">
+          <label>总预算（元）</label>
+          <input type="number" id="f-budget" placeholder="50000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>补充说明</label>
+        <textarea id="f-remark" placeholder="其他需要备注的信息"></textarea>
+      </div>
+    </div>
+    <div class="form-footer">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" id="btn-submit" onclick="submitForm()">提交创建</button>
+    </div>
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
 const API = 'https://api.github.com/repos/beastwjf/huanliangshan-pm-system';
-const TAG_MAP = {'会务':'会务','招商引资':'招商引资','人才培训':'人才培训','联合营销':'联合营销','产业对接':'产业对接','合规':'合规','日常运营':'日常运营','协作托管':'协作托管'};
-const LEVEL_MAP = {'S':'S','A':'A','B':'B','C':'C'};
+
+// base64 UTF-8 解码（修复中文乱码）
+function decodeBase64(base64) {
+  const binary = atob(base64.replace(/\s/g, ''));
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s || '';
+  return d.innerHTML;
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || 'success') + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function getToken() {
+  return sessionStorage.getItem('gh_token') || document.getElementById('gh-token').value.trim();
+}
+
+function saveToken() {
+  const v = document.getElementById('gh-token').value.trim();
+  if (!v) return showToast('请输入 Token', 'error');
+  sessionStorage.setItem('gh_token', v);
+  document.getElementById('gh-token').value = '';
+  showToast('Token 已保存到当前会话');
+}
+
+function openModal() { document.getElementById('modal').classList.add('active'); }
+function closeModal() { document.getElementById('modal').classList.remove('active'); }
+
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal') closeModal();
+});
+
+async function submitForm() {
+  const token = getToken();
+  if (!token) return showToast('请先输入 GitHub Token', 'error');
+
+  const name = document.getElementById('f-name').value.trim();
+  const level = document.getElementById('f-level').value;
+  const tag = document.getElementById('f-tag').value;
+  const desc = document.getElementById('f-desc').value.trim();
+  const owner = document.getElementById('f-owner').value;
+  const end = document.getElementById('f-end').value;
+  const budget = document.getElementById('f-budget').value;
+  const remark = document.getElementById('f-remark').value.trim();
+
+  if (!name || !level || !tag || !desc || !owner) {
+    return showToast('请填写所有必填项', 'error');
+  }
+
+  const btn = document.getElementById('btn-submit');
+  btn.classList.add('btn-loading');
+  btn.innerHTML = '<span class="spin"></span>提交中...';
+
+  const body = `### project-name\n\n${name}\n\n### project-level\n\n${level}级（${{'S':'战略级，联合会主导','A':'重点级，跨部门协作','B':'常规级，单部门可执行','C':'观察级，评估阶段'}[level]}）\n\n### project-tag\n\n${tag}\n\n### project-desc\n\n${desc}\n\n### project-owner\n\n${owner}\n\n${end ? `### project-end-date\n\n${end}\n\n` : ''}${budget ? `### project-budget\n\n${budget}\n\n` : ''}${remark ? `### project-remark\n\n${remark}` : ''}`;
+
+  try {
+    const res = await fetch(`${API}/issues`, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'token ' + token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ title: '[新项目] ' + name, body, labels: ['project'] })
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'HTTP ' + res.status);
+    }
+    const data = await res.json();
+    closeModal();
+    document.getElementById('f-name').value = '';
+    document.getElementById('f-desc').value = '';
+    document.getElementById('f-remark').value = '';
+    document.getElementById('f-budget').value = '';
+    showToast(`项目 Issue #${data.number} 创建成功，AI 处理中...`);
+    setTimeout(init, 1500);
+  } catch(e) {
+    showToast('创建失败: ' + e.message, 'error');
+    console.error(e);
+  } finally {
+    btn.classList.remove('btn-loading');
+    btn.textContent = '提交创建';
+  }
+}
 
 async function init() {
   try {
@@ -112,19 +293,17 @@ async function init() {
 
     let projects = [];
     try {
-      const decoded = atob(projectsData.content);
+      const decoded = decodeBase64(projectsData.content);
       projects = JSON.parse(decoded).projects || [];
     } catch(e) { console.warn('projects.json parse error', e); }
 
     const pendingIssues = issuesData.filter(i => !i.title.startsWith('[已处理]'));
 
-    // Stats
     document.getElementById('stat-total').textContent = projects.length;
     document.getElementById('stat-active').textContent = projects.filter(p => p.status === '执行中').length;
     document.getElementById('stat-done').textContent = projects.filter(p => p.status === '已归档').length;
     document.getElementById('stat-pending').textContent = pendingIssues.length;
 
-    // Render project list
     const listEl = document.getElementById('project-list');
     if (projects.length === 0) {
       listEl.innerHTML = '<div class="empty">暂无项目，点击"新建项目"开始</div>';
@@ -153,12 +332,6 @@ async function init() {
     document.getElementById('project-list').innerHTML = '<div class="empty">数据加载失败，请刷新重试</div>';
     console.error(e);
   }
-}
-
-function esc(s) {
-  const d = document.createElement('div');
-  d.textContent = s || '';
-  return d.innerHTML;
 }
 
 init();
