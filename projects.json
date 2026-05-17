@@ -1,0 +1,19 @@
+{
+  "schema_version": "1.0",
+  "description": "环两山联合会 - 项目注册表（索引）",
+  "updatted_at": "2026-05-17",
+  "projects": [],
+  "field_description": {
+    "id": "项目ID，格式：{级别}-{标签}-{日期}-{序号}，如 A-会务-20260517-001",
+    "name": "项目名称",
+    "level": "S/A/B/C 四级",
+    "tag": "会务/招商/培训/品宣/产业对接/合规/日常运营/协作托管",
+    "owner": "负责人",
+    "start_date": "开始日期 yyyy-mm-dd",
+    "end_date": "截止日期 yyyy-mm-dd",
+    "status": "立项中/执行中/已暂停/已归档/已取消",
+    "feishu_master": "飞书项目总表记录链接",
+    "feishu_compliance": "飞书合规档案记录链接",
+    "folder_link": "飞书项目库文件夹链接"
+  }
+}
